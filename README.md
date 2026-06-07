@@ -43,7 +43,6 @@ AI watermarking; statistical inference; forensic standards; evidentiary weightin
 **Timestamp:** OpenTimestamps blockchain proof of existence, April 16, 2026
 (see `statistical_horizon_v5_final.pdf.ots`)
 
-**Preprint:** Formal preprint submission in progress. Manuscript and
-timestamped proof of existence available in this repository.
+**Preprint:** Preprint status: A formal preprint submission was attempted; the current manuscript and timestamped proof of existence are available in this repository
 
 **License:** CC-BY Attribution 4.0 International
