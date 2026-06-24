@@ -1,48 +1,17 @@
 # The Statistical Horizon: A Scaling Benchmark and Procedural Caution for Institutional Use of AI Text Watermarking
 
-**Henri F. Van Ryn** | Independent Researcher | henri.vanryn@gmail.com
+Henri F. Van Ryn | Independent Researcher | henri.vanryn@gmail.com
 
-Version 5.0 | February 10, 2026 (revised April 16, 2026)
+Version 5.8 | February 10, 2026 (revised June 23, 2026)
+
+> Watermark detection tells you a signal is present; it does not tell you the signal is strong enough to act on. This paper shows why that gap is largest exactly where institutions are most tempted to act — on short texts — and what disclosure is needed before a detector output can bear institutional weight.
 
 This repository contains the public deposit of the working paper formalizing the Statistical Horizon as a structural scaling benchmark for finite-sample AI text watermark detectability.
 
 ## Abstract
 
-AI text watermarking systems embed statistical signals in generated 
-output to enable downstream detection. This paper formalizes the 
-Statistical Horizon as a structural scaling benchmark: the minimum 
-sample size at which a watermark becomes reliably detectable at a 
-specified power level. The analysis distinguishes two thresholds — 
-n_H (50% power, detection floor) and n_E (80–95% power, evidentiary 
-benchmark) — and derives the scaling relationship between signal 
-strength, sample length, and detection confidence. The central finding 
-is that as signal strength decreases or adversarial transformation 
-increases, the sample size required for decision-grade detection rises 
-sharply. This structural limit has direct implications for proposed 
-evidentiary standards, including Proposed Federal Rule of Evidence 707: 
-a detector can be technically functional while remaining insufficient 
-for the evidentiary burden assigned to it. Structural limits are not 
-obstacles to governance. They are conditions for governing responsibly.
+AI text watermarking has evolved from academic speculation into industrial practice, but watermark detections remain probabilistic indicators rather than proof of authorship. This paper formalizes the Statistical Horizon as a structural scaling benchmark: in a stylized mean-shift model, the sample length required for detection scales inversely with the square of the combined signal term, creating a steep, inverse-quadratic penalty for low-visibility watermarking. The paper distinguishes two thresholds — a lower detectability floor (n_h, the 50%-power point) and a higher-power reliability benchmark (n_E) — and argues that crossing the detectability floor does not, by itself, justify institutional reliance.
 
+The framework's contribution is to discipline how watermark signals are interpreted, not to weaken watermarking technology. It does not propose a new detector, a universal token threshold, or an admissibility rule. Instead it shows why short-text detections under undisclosed parameters are especially vulnerable to overinterpretation, and it sets out what must accompany a detector output before an institution relies on it: disclosed system parameters, empirically characterized error rates at the relevant text length, robustness information, base-rate and multiple-testing context, and corroboration.
 
-## Files
-
-- `statistical_horizon_v5_final.pdf` — final manuscript
-- `statistical_horizon_v5_fixed.docx` — Word source document
-- `statistical_horizon_v5_final.pdf.ots` — OpenTimestamps blockchain proof of existence (April 16, 2026)
-
-
-## Keywords
-
-AI watermarking; statistical inference; forensic standards; evidentiary weighting; machine learning governance; digital provenance; AI policy
-## Provenance
-
-**SHA256** (`statistical_horizon_v5_final.pdf`):
-`a5a05d6e458282bce5749eeb7fd254c60046a9b359ec1bbc3ccf2a73380e810f`
-
-**Timestamp:** OpenTimestamps blockchain proof of existence, April 16, 2026
-(see `statistical_horizon_v5_final.pdf.ots`)
-
-**Preprint:** Preprint status: A formal preprint submission was attempted; the current manuscript and timestamped proof of existence are available in this repository
-
-**License:** CC-BY Attribution 4.0 International
+The paper situates this caution within current governance. Where a watermark detector output is offered as expert evidence in a U.S. federal proceeding, the disclosures proposed here are technical inputs to the court's Rule 702 / Rule 104(a) reliability gatekeeping — not a substitute for it. In the EU, the framework bears on Article 50 transparency obligations and the Code of Practice on Transparency of AI-Generated Conten
