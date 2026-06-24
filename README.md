@@ -28,11 +28,11 @@ A watermark detector may be technically valid and still produce outputs that are
 
 ## Files
 
-- statistical_horizon_v5_8.pdf — current manuscript (v5.8)
-- statistical_horizon_v5_8.tex — editable LaTeX source (canonical master)
-- statistical_horizon_v5_final.pdf — earlier manuscript (v5.0, archival)
-- statistical_horizon_v5_final.pdf.ots — OpenTimestamps blockchain proof of existence for v5.0 (April 16, 2026)
-- statistical_horizon_v5_fixed.docx — Word source (v5.0, archival)
+- [`statistical_horizon_v5_8.pdf`](statistical_horizon_v5_8.pdf) — current manuscript (v5.8)
+- [`statistical_horizon_v5_8.tex`](statistical_horizon_v5_8.tex) — editable LaTeX source (canonical master)
+- [`statistical_horizon_v5_final.pdf`](statistical_horizon_v5_final.pdf) — earlier manuscript (v5.0, archival)
+- [`statistical_horizon_v5_final.pdf.ots`](statistical_horizon_v5_final.pdf.ots) — OpenTimestamps blockchain proof of existence for v5.0 (April 16, 2026)
+- [`statistical_horizon_v5_fixed.docx`](statistical_horizon_v5_fixed.docx) — Word source (v5.0, archival)
 
 ## Version History
 
