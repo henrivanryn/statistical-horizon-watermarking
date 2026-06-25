@@ -1,13 +1,14 @@
 cff-version: 1.2.0
 message: "If you use this work, please cite it as below."
 title: "The Statistical Horizon: A Scaling Benchmark and Procedural Caution for Institutional Use of AI Text Watermarking"
+type: article
 authors:
   - family-names: "Van Ryn"
     given-names: "Henri F."
     email: "henri.vanryn@gmail.com"
 version: "5.8"
 date-released: "2026-06-23"
-type: article
+license: "CC-BY-4.0"
 keywords:
   - "AI watermarking"
   - "statistical inference"
@@ -16,10 +17,3 @@ keywords:
   - "machine learning governance"
   - "digital provenance"
   - "AI policy"
-abstract: >-
-  AI text watermarking has evolved from academic speculation into industrial
-  practice. This paper formalizes the Statistical Horizon as a structural scaling
-  benchmark for finite-sample watermark detectability and argues that watermark
-  detections should be treated as probabilistic, assumption-sensitive forensic
-  signals rather than proof of authorship.
-license: "CC-BY-4.0"
