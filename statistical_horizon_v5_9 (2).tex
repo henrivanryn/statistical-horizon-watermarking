@@ -1,0 +1,775 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+\usepackage{newunicodechar}
+% --- amsthm definition environment ---
+\usepackage{amsthm}
+\newtheorem{definition}{Definition}
+\title{The Statistical Horizon: A Scaling Benchmark and Procedural
+Caution for Institutional Use of AI Text Watermarking}
+\author{Henri F. Van Ryn\\
+Independent Researcher\\
+\texttt{henri.vanryn@gmail.com}}
+\date{February 10, 2026 (revised July 23, 2026)\\Version 5.9 --- Preprint}
+\begin{document}
+\maketitle
+\begin{abstract}
+AI text watermarking has evolved from academic speculation into industrial
+practice. Yet watermark detections remain probabilistic indicators rather than
+proof of authorship. This paper formalizes the Statistical Horizon as a
+structural scaling benchmark for finite-sample watermark detectability. In the
+stylized mean-shift model used here, required sample length scales inversely with
+the square of the combined signal term $\eta\delta$, creating a steep,
+inverse-quadratic penalty for low-visibility watermarking.
+The paper argues that this scaling result should not be confused with a rule for
+strong institutional attribution. Under the model developed here, the Statistical
+Horizon $n_h$ is best understood as a lower detectability floor: it corresponds to
+the point at which expected detector signal reaches threshold and, in the Gaussian
+power analysis, to a 50\% detection-power point. Stronger institutional use
+generally requires longer text than this floor alone would suggest. To make that
+gap explicit, the paper also defines a higher-power reliability benchmark $n_E$,
+showing that practical institutional interpretation depends not only on watermark
+strength but also on desired power, calibration, sample length, robustness, and
+disclosure. The resulting framework is intended to discipline how watermark
+signals are relied upon rather than to weaken watermarking technology as such.
+\medskip
+\noindent\textbf{Keywords:} AI watermarking; statistical inference; forensic
+science; institutional reliance; machine learning governance; digital provenance;
+AI policy.
+\end{abstract}
+\section{Introduction}
+\subsection{Motivation and the Interpretive Gap}
+The rapid proliferation of Large Language Models (LLMs) has forced a parallel
+evolution in digital provenance. As synthetic text becomes increasingly difficult
+to distinguish from human writing at the semantic level, watermarking has emerged
+as a leading technical strategy for attribution. These approaches---ranging from
+synonymous substitution to logit ``green-list'' biasing---attempt to embed a
+recoverable statistical signal in generated text.
+Yet the interpretive problem begins where the engineering result ends. Technical
+watermarking literature evaluates systems in terms of detectability: $z$-scores,
+likelihood ratios, power, and related performance measures. Institutional and
+adjudicative use, however, asks a different question: what, if anything, a
+detector output warrants as evidence. Those questions are related, but they are
+not identical. A detector can be capable of signaling under some conditions
+without thereby yielding robust evidence of authorship in disciplinary,
+regulatory, or forensic settings.
+Watermark detection is not the discovery of a hidden cryptographic tag. It is a
+probabilistic inference drawn from a finite text sample under model-dependent
+assumptions. This paper formalizes the Statistical Horizon: a structural scaling
+benchmark that marks the sample-length regime in which expected detector signal
+reaches a specified threshold under stated assumptions. The goal is not to
+undermine watermarking technology, but to discipline its evidentiary use.
+Watermark evidence should therefore be treated as an indicative and
+assumption-sensitive forensic signal, not as an oracle of authorship.
+The paper's central claim is narrow but consequential. The horizon equation
+identifies a structural relationship between watermark strength, detector
+response, and sample length. It does not by itself yield a universal admissibility
+threshold, nor does it license a fixed token rule across watermarking systems. On
+the contrary, the framework shows that required text length is highly sensitive to
+hidden or undisclosed parameters. In low-visibility regimes, the sample lengths
+needed for practically informative detection may be much larger than casual policy
+discussion assumes.
+This matters because short-text detector outputs are especially vulnerable to
+overinterpretation. In settings where watermark strength, calibration data, and
+system parameters are not disclosed, external reviewers cannot reliably determine
+how much institutional weight a detector result deserves. The resulting problem is
+not merely technical but procedural: absent disclosure and corroboration,
+institutions risk treating a model-dependent signal as though it were dispositive
+evidence.
+The specification sensitivity of SynthID-Text was not discovered only after
+deployment. Dathathri et al. documented in the system's supplementary materials
+that additional tournament layers can eventually add more collision noise than
+watermark signal under the mean score, and that the learned Bayesian score avoids
+this degradation by down-weighting later layers.ootnote{Dathathri et al.,
+Supplementary Appendix H.4--H.5; see also Supplementary Fig. C1 [18].} Omidi et
+al. later formalized those behaviors and demonstrated that the documented tradeoff
+can become an attack surface through layer inflation [11]. The institutional
+concern is therefore not simply that detector performance is
+configuration-dependent. It is that the technical information required to
+interpret a detector output correctly exists in the developer's documentation
+without necessarily traveling with the output when it is used in a consequential
+decision.
+\subsection{Related Work and Contribution}
+Kirchenbauer et al.\ show that watermark detection can succeed on very short
+samples under specific experimental conditions, including relatively strong
+watermark parameters such as $(\gamma, \delta) = (0.25, 2)$ in their
+proof-of-concept setting [1]. That result is important as an engineering
+demonstration of detectability, but it does not by itself establish a forensic or
+regulatory standard for interpreting detector outputs on short text. Subsequent
+work has emphasized robustness, distortion-free or unbiased watermarking, semantic
+or paraphrase robustness, public detectability, and attack surfaces such as
+stealing, spoofing, and scrubbing [2, 3, 4, 5, 6, 7]. Statistical work has also
+generalized the efficiency analysis of watermark detectors beyond simple
+$z$-tests [8].
+Accordingly, this paper distinguishes three levels of analysis that are often
+blurred in discussion of AI watermarking: statistical detectability, practical
+reliability, and forensic or institutional use. Its contribution is not a new test
+statistic. Rather, it uses a simple scaling benchmark to show why low-visibility
+watermarking creates an unusually severe short-sample problem for institutional
+use, and why the detectability of a signal should not be confused with its
+reliability for institutional reliance.
+That distinction has become more urgent as watermarking and provenance move from
+research demonstrations into live governance settings. In the European Union,
+transparency obligations under Article 50 of the AI Act become applicable on 2
+August 2026,\footnote{See Regulation (EU) 2024/1689, Art.\ 113 (application date);
+Art.\ 50 (transparency obligations) [16].} The Commission published the voluntary
+Code of Practice on Transparency of AI-Generated Content on 10 June 2026,
+concluded in July that the Code adequately supports implementation of Article
+50(2), (4), and (5), and published implementing guidelines on 20 July 2026 [15].
+The present framework is not offered as an interpretation of any single legal
+instrument; rather, it is offered as a way to discipline evidentiary claims in a
+policy environment that increasingly expects marking, detectability, and
+transparent interpretation to coexist.
+The interplay among the EU AI Act's Article 50 transparency obligations, emerging
+state-level AI disclosure laws, and provenance standards such as C2PA increases
+the practical importance of distinguishing compliance marks from reliable
+institutional evidence.\footnote{For example, Article 50 of the EU AI Act
+addresses marking and detection of AI-generated content; California's AI
+Transparency Act imposes disclosure and detection-tool obligations on covered
+generative-AI providers for specified categories of image, video, and audio
+content [17]; and C2PA provides a technical provenance framework through Content
+Credentials [14]. These regimes differ in legal force, scope, and technical
+mechanism.} These legal and technical frameworks variously require, enable, or
+begin to standardize machine-readable indications of origin---at different scopes
+and with different legal force. But the existence of a mark, manifest, or
+provenance metadata is not the same as downstream reliability for institutional
+reliance. Compliance-oriented outputs should not be mistaken for decision-ready
+evidence.\footnote{The phrase ``decision-ready evidence'' is used in a
+technical-policy sense; it does not denote a legal standard of admissibility or
+sufficiency under any evidentiary rule or jurisdiction-specific standard.} That
+observation applies most directly to probabilistic detection outputs;
+cryptographic provenance attestations such as C2PA manifests raise distinct
+verification questions outside the scope of this paper. What is needed---and what
+the present framework is intended to support---is disclosed reliability
+information showing when a detector output has been adequately characterized, in
+terms of error rates, text-length thresholds, and stated assumptions, for the
+institutional use to which it is being put.
+\section{The Statistical Horizon: Formalization}
+\subsection{Key Assumptions}
+The horizon derivation in this paper rests on three stylized assumptions:
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Approximate token-level independence:} Green-list assignments and
+token draws are treated as independent for analytic tractability.
+\item \textbf{Locally linear watermark response:} The increase in green-token
+probability is proportional to the logit bias $\delta$ for small-to-moderate
+$\delta$.
+\item \textbf{Gaussian approximation:} The normalized detector statistic is
+approximated by a standard normal distribution under the null and a shifted normal
+under the alternative.
+\end{itemize}
+Each assumption may be violated in practice. Violations (especially positive
+autocorrelation) generally increase required sample length, making the stylized
+derivation optimistic from the perspective of detectability. The cautionary
+conclusion is therefore robust in the sense that many realistic departures from
+the stylized model do not make undisclosed short-sample attribution safer.
+A rough sense of magnitude is useful. Under positive autocorrelation with lag-1
+coefficient $\rho$, the variance of the green-token count exceeds the independence
+benchmark by an inflation factor that, for an AR(1)-like structure, is
+approximately $(1+\rho)/(1-\rho)$. Because the horizon scales inversely with the
+variance-normalized signal, the required sample length grows by roughly the same
+factor: a modest $\rho = 0.3$ implies an inflation of about $1.9\times$, and
+$\rho = 0.5$ implies roughly $3\times$. Token-level dependence is material because
+green-list assignment is itself seeded by preceding tokens, so corrections in this
+range are plausible rather than extreme. The independence-based horizon should
+therefore be read as a lower bound on required length, potentially by a factor of
+two or more at the text lengths institutions typically evaluate. This estimate is
+heuristic: the exact variance structure induced by green-list seeding and decoding
+is more complex than a simple binary AR(1), and the figures above are intended as
+order-of-magnitude intuition rather than calibrated corrections.
+\subsection{Derived Scaling Relation}
+In the simplified mean-shift model used here, the sample length at which the
+expected detector statistic reaches threshold under the normal approximation scales
+according to the relation derived in Appendix A. More generally, if $z^* > 0$
+denotes the critical value of the detector statistic for a one-sided threshold test
+under the stylized normal approximation, and $\eta$
+denotes the variance-normalized detector-response parameter defined formally in
+Appendix A, the horizon length $n_h$ satisfies:
+\begin{equation}
+n_h = \frac{(z^*)^2}{(\eta\delta)^2}
+\end{equation}
+\begin{definition}[Statistical Horizon]
+$n_h$ is the sample length at which the expected detector statistic reaches the
+threshold $z^*$. Under the Gaussian model developed in Appendix B, this
+corresponds to a 50\% detection-power point. It is a lower detectability floor, not
+a reliability benchmark for institutional reliance.
+\end{definition}
+\noindent\textbf{What this result does not mean.} The Statistical Horizon $n_h$ is
+not a universal admissibility threshold, a minimum token rule applicable across all
+watermarking systems, or a quantitative claim about any specific deployed detector.
+It is a structural scaling result derived under three stylized
+assumptions---approximate token independence, locally linear watermark response,
+and Gaussian approximation---that are stated precisely because they are known to be
+optimistic. The horizon marks the sample length at which expected detector signal
+reaches threshold under those assumptions; it does not mark the length at which a
+detector output becomes suitable for institutional reliance. That determination
+requires additional inputs: disclosed system parameters, empirically characterized
+error rates, robustness information, and a power analysis appropriate to the
+decision being made. The numerical examples in Table 2 are analytic sensitivity
+illustrations under the reduced-form model; they are not calibrated claims about
+real-world detector performance.
+The scaling relation above is derived only under the formal definition of $\eta$.
+In the main text, references to ``effective detector response'' ($\eta_{e}$) are
+heuristic and intended for sensitivity reasoning under non-ideal conditions rather
+than exact cross-system calculation.
+The operational value of $n_h$ and $n_E$ depends on whether $\eta$, or a
+deployment-specific effective analogue, can be disclosed, estimated, or bounded. The parameter $\eta$ is not
+generally observable from a detector output alone; it depends on the watermark
+design, detector construction, and the model's token-level response to the
+watermarking intervention. Where a provider does not disclose enough information to
+estimate or bound that response, the horizon cannot be externally computed. In that
+setting, the framework functions not as a usable threshold but as a disclosure
+requirement: the institution lacks the information needed to determine whether the
+detector output is reliable at the relevant text length.
+Even when treated illustratively, the sensitivity of $n_h$ to the combined signal
+is substantial because $n_h \propto 1/(\eta^2\delta^2)$. Halving the effective
+signal requires approximately four times as much text to maintain the same expected
+detector signal.
+That distinction matters. Crossing a statistical detectability floor and satisfying
+a strong standard for institutional reliance are related but distinct events. The
+former concerns model-based signal detectability under specified assumptions. The
+latter concerns whether the resulting signal is sufficiently reliable, transparent,
+and interpretable to carry substantial institutional weight. That second judgment
+depends not only on the existence of a signal, but also on desired power,
+disclosure, calibration, robustness, and the availability of corroboration.
+\subsection{From a Detectability Floor to a Higher-Power Reliability Benchmark}
+If the target is not mere detectability but a higher operational power level
+$1-\beta$, then the Gaussian mean-shift model yields a corresponding higher-power
+reliability benchmark:
+\begin{equation}
+n_E = \frac{(z^* + z_{1-\beta})^2}{(\eta\delta)^2}
+\end{equation}
+where $z_{1-\beta} = \Phi^{-1}(1-\beta)$ is the standard normal quantile associated
+with the desired power (e.g., $z_{0.8} \approx 0.84$, $z_{0.9} \approx 1.28$).
+Equation (2) makes explicit what the basic horizon alone can obscure: the amount of
+text needed for a higher-confidence institutional use may be several times larger
+than the 50\%-power floor $n_h$. The notation $n_E$ is retained for continuity with
+earlier drafts; it refers here to a higher-power reliability benchmark, not to legal
+evidentiary sufficiency. Throughout, ``reliability'' denotes the statistical power
+and repeatability of detection under the assumed model; it is distinct from the
+reliability standard of Federal Rule of Evidence 702(c)--(d), which Section 5
+addresses separately.
+For a fixed detectability threshold $z^*$, the gap between $n_h$ and $n_E$ is
+governed by the power term $z_{1-\beta}$. The ratio is:
+\begin{equation}
+\frac{n_E}{n_h} = \left(1 + \frac{z_{1-\beta}}{z^*}\right)^2
+\end{equation}
+For example, when $z^* = 3$, the required sample size increases by approximately
+$1.64\times$ for 80\% power, $2.04\times$ for 90\% power, and $2.40\times$ for 95\%
+power. Thus the higher-power reliability benchmark does not merely ask whether
+detection has crossed a lower statistical floor; it asks how much additional sample
+length is required before an institution may rely on that detection with a
+specified level of power.
+It is important to read $n_E$ as a statistical quantity. It is the sample length
+required to achieve a chosen detection power against a specified alternative; it is
+not, by itself, a measure of institutional weight, which additionally depends on
+prior odds, the asymmetric costs of false positives and false negatives, robustness
+to model misspecification, and adversarial exposure. $n_E$ is therefore best
+understood as a model-based power-analysis benchmark that can inform stronger
+institutional reliance, not a complete decision rule or standalone basis for
+attribution.
+\subsection{A Concrete Illustration of Overinterpretation}
+Consider a hypothetical academic-integrity setting. A 300-word student essay
+($\approx 400$ tokens) yields a watermark detector output with $z = 4.2$, well
+above a typical threshold of $z^* = 3$. An administrator might treat this as strong
+evidence of AI generation. However, suppose the watermarking system operates in a
+low-visibility regime (e.g., $\eta\delta = 0.1$). Then $n_h = 9/0.01 = 900$ tokens,
+and $n_E$ at 90\% power is roughly $2.04 \times 900 \approx 1{,}836$ tokens.
+Crucially, $n_h$ is a population-level benchmark on the expected detector signal,
+not a per-sample guarantee. A short text can produce a high observed statistic, and
+if the detector is well calibrated that statistic may still be evidence against the
+null. The institutional problem is different: at 400 tokens, the sample is below the
+length at which the assumed model would deliver the desired pre-specified detection
+power, and without disclosed parameters, comparable-length calibration, and
+dependence checks, the result should not be converted into strong attribution.
+This example is illustrative, not a universal claim. But it shows why short samples
+and undisclosed parameters are a dangerous combination for institutional use. Even
+under these simplified assumptions, short-text attribution may remain
+institutionally underpowered after it has crossed a minimal detectability boundary.
+\subsection{The Horizon Is Operationally Dynamic}
+The Statistical Horizon should not be read as a static property of a watermarking
+problem once and for all. In practice, the effective signal term $\eta_e\delta$ can
+shift as watermark construction changes, detector design improves, post-generation
+editing alters the signal, or disclosure quality allows external reviewers to model
+the system more accurately. A fixed text length may therefore occupy different
+evidentiary positions at different times or across different deployments.
+This point matters for governance. Institutions may be tempted to treat a detector
+output as though it had stable meaning across vendors, revisions, or attack
+conditions. The present framework counsels against that inference. The horizon is
+better understood as an operationally dynamic benchmark: a way to ask what sample
+length is required under stated conditions, not a way to assume that one detector
+result carries the same weight across changing technical or institutional settings.
+Omidi et al. sharpen this point by proving the mean-score behavior to be unimodal,
+characterizing the Bayesian score as non-decreasing and saturating, and quantifying
+the corresponding layer effects [11]. Their principal additional contribution is
+to show that the asymmetry is exploitable: an adversary can add tournament layers
+to suppress mean-score detectability while leaving Bayesian-score detectability
+non-decreasing. The result is therefore best understood as a formalization,
+quantification, and attack construction built on a design tradeoff already
+documented by Dathathri et al., rather than as the first discovery of specification
+dependence.
+\section{Institutional Use and the ``Safety Floor'' Principle}
+The Statistical Horizon has direct implications for responsible institutional use of
+watermark evidence, but not in the form of a universal token threshold. The horizon
+equation identifies a scaling relationship between watermark strength, detector
+response, and sample length. It does not by itself establish that any fixed number
+of tokens is generally sufficient for forensic, disciplinary, or regulatory use
+across watermarking systems.
+This limitation is not incidental. In real deployments, the quantities needed to
+interpret detector outputs may be partially or wholly undisclosed: watermark
+strength, green-list construction, detector design, calibration data, robustness to
+post-editing, and other system-specific parameters may not be available to external
+reviewers. Under those conditions, even a formally correct detector output may have
+uncertain evidentiary meaning.
+AI watermark detection is therefore best understood as a hybrid evidentiary form: a
+machine-mediated statistical signal whose institutional weight depends on
+assumptions, calibration, sample length, and operator transparency. This cautionary
+stance is consistent with broader forensic-science literature, which has repeatedly
+stressed that scientific validity, calibrated limits, and transparent interpretation
+are prerequisites for responsible institutional use of technical evidence [9, 10].
+The present paper's narrower contribution is to show why watermark evidence is
+especially vulnerable to short-sample failure: low visibility and weakened effective
+response impose an inverse-quadratic sample-length penalty, making the gap between
+detectability and reliability for institutional reliance unusually severe.
+\subsection{The Safety Floor}
+In this paper, the Safety Floor refers to the procedural stance that treats $n_h$ as
+a necessary detectability floor but not, standing alone, an adequate basis for
+attributing substantial institutional weight to a detector output, with stronger
+institutional claims requiring movement toward a higher-power benchmark such as
+$n_E$ together with the additional inputs identified in Section 3.2. Where text is
+short, watermark strength is unknown, or calibration evidence is unavailable, the
+default institutional posture should be conservative.
+Table 1 summarizes a proposed heuristic for weighing watermark signals under
+different conditions. This table is a diagnostic aid, not a decision procedure. Its
+rows do not create universal thresholds, admissibility rules, or categorical legal
+standards. They describe institutional postures under stated assumptions about
+detector calibration, text length, and parameter disclosure. Where those parameters
+are estimated, undisclosed, or domain-dependent, the table should be read as
+uncertainty-aware guidance rather than a bright-line rule.
+\begin{table}[h]
+\centering
+\caption{Heuristic institutional reliance postures (one possible heuristic,
+illustrative rather than normative).}
+\begin{tabular}{p{0.42\textwidth}p{0.48\textwidth}}
+\toprule
+\textbf{Condition} & \textbf{Suggested institutional posture}\\
+\midrule
+$L \ll n_h$ or parameters undisclosed & No standalone attribution; not externally
+weightable\\
+$L \approx n_h$ but no calibration & Indicative only; requires corroboration\\
+$L \geq n_E$ with disclosed parameters and robustness tests & May support moderate
+institutional weight\\
+Non-watermark provenance available (e.g., C2PA) & Potentially stronger combined
+reliability, subject to verification\\
+\bottomrule
+\end{tabular}
+\end{table}
+\subsection{Disclosure and Corroboration}
+The framework supports a firm disclosure principle: if an institution wishes to rely
+materially on watermark evidence, it must disclose enough about the detector family,
+calibration regime, sample-length comparability, and robustness assumptions to allow
+an external reviewer to assess whether the sample meaningfully exceeds a disclosed
+detectability floor. In the absence of such disclosure, watermark evidence should be
+treated as unreliable for strong institutional use.
+This principle is normative rather than formally derived from the horizon equation;
+it is proposed as a procedural response to parameter sensitivity, opacity, and
+finite-sample uncertainty. A minimally adequate showing in an academic-integrity
+setting might include disclosure of the detector family used, calibration results on
+texts of comparable length, reported false-positive behavior under ordinary editing
+or paraphrasing, and corroborating non-detector evidence tied to the same
+submission.
+Watermark evidence should not be treated as existing in isolation from other
+possible attribution signals. A downstream institution may also consider stylometric
+indicators, linguistic structure, document organization, edit history, provenance
+metadata, or author-specific baselines where available. But those signals may not be
+independent. Many of these features may share a common source in the generative
+model's underlying probability distribution, decoding process, or post-generation
+editing history, making their apparent independence an assumption rather than a
+demonstrated property. Structural correlations are plausible at multiple levels of
+the text and should not be assumed absent empirical demonstration: word choice,
+sentence construction, paragraph organization, document structure, argument style,
+and broader writing style. Treating each indicator as a separate and independent
+source of evidence can therefore overstate the strength of the overall
+attribution.\footnote{This is a structural inference rather than a claim about any
+specific detector or feature set. The empirical correlation structure among
+stylometric, organizational, provenance-based, and model-based indicators in
+AI-generated text has not been systematically characterized. Conditional
+independence should therefore be treated as a hypothesis requiring verification
+before multiple signals are combined as independent evidence.}
+The Statistical Horizon problem is one instance of a broader caution: assumptions
+about independence, error structure, and evidentiary strength must be examined
+rather than silently inherited. In high-stakes settings, an unexamined assumption
+can become the source of an incorrect conclusion.
+\subsection{Base Rates and Multiple Testing}
+The horizon analysis so far concerns a single text evaluated in isolation.
+Institutional deployment rarely looks like that, and two population-level effects
+further constrain the institutional weight of a positive detection.
+First, base rates govern positive predictive value. Even a well-calibrated detector
+with a low false-positive rate $\alpha$ will, when applied to a large corpus that is
+mostly human-written, return a substantial number of false positives in absolute
+terms. The probability that a flagged text is in fact watermarked depends not only on
+$\alpha$ and detector power but on the prior prevalence of watermarked text in the
+population screened. Where that prevalence is low or unknown, a positive detection on
+a single short sample carries correspondingly weak posterior support, regardless of
+how far the observed statistic exceeds $z^*$. This is the familiar base-rate problem
+of forensic inference, and it compounds the short-sample fragility described above
+rather than substituting for it.
+Second, multiple testing inflates expected false positives. An institution screening
+thousands of submissions performs thousands of simultaneous tests; a per-test
+threshold that appears stringent in isolation can produce many spurious flags across
+the corpus. Responsible institutional use therefore requires error control
+appropriate to the screening scale---for example, family-wise or
+false-discovery-rate adjustment---before any individual flag is treated as
+meaningful. Neither base-rate sensitivity nor multiple-testing correction is captured
+by $n_h$ or $n_E$, which describe the detectability and power of a single test. They
+are additional constraints on responsible institutional reliance, not consequences of
+the horizon itself.
+The higher-power reliability benchmark $n_E$ is a power-analysis benchmark, not a
+posterior probability of AI generation or watermark presence. It indicates whether a
+detector has enough sample-length-supported signal to achieve a stated power level
+under the assumed model. Institutional decisions may also require base-rate
+information, likelihood ratios, alternative explanations, and assessment of
+asymmetric costs. Thus $n_E$ can inform institutional reliance, but it does not by
+itself complete the Bayesian or decision-theoretic analysis. Even when a detector
+output meets or exceeds $n_E$ under full disclosure and robustness conditions,
+institutional weight still requires base-rate adjustment, multiple-testing control
+where applicable, corroboration, and case-specific assessment of asymmetric costs;
+$n_E$ remains an input to that judgment, not a substitute for it.
+\subsection{Adversarial Degradation}
+A further complication is adversarial degradation. In contemporary settings, the
+threat is not limited to benign paraphrasing or ordinary editing. Spoofing,
+watermark stealing or forgery, model adaptation, and cross-system attack strategies
+may either weaken a genuine signal or create a misleading appearance of one
+[7, 11, 12]. The structural intuition is that reductions in effective
+signal-to-noise ratio compound as a sample-length burden, while forged or
+counterfeited signals create a distinct false-positive risk. Both attack modes
+strengthen the case for cautious treatment unless robustness conditions are disclosed
+and empirically supported.
+The cited results give a qualitative sense of magnitude. Watermark stealing and
+spoofing attacks can reconstruct enough of the green-list structure to forge or scrub
+signals, which in the framework's terms drives effective $\eta\delta$ toward zero for
+scrubbing and creates false-positive signal where none was generated for spoofing
+[7, 11]. Adaptive stealing approaches reduce the text required to approximate the
+watermark rule, eroding the very disclosure-and-calibration assumptions on which
+reliable detection depends [12]. Analyses of production-oriented systems indicate
+that robustness varies substantially with editing and paraphrase intensity. The
+common structural point is that adversarial pressure does not merely add noise; it
+can shift the effective operating point of the detector in ways that are not
+observable from the detector output alone, which is precisely the condition under
+which the framework counsels against strong institutional reliance.
+\subsection{Practical Summary}
+\begin{itemize}[leftmargin=2em]
+\item A watermark ``hit'' on a short passage does not by itself establish origin.
+\item Reaching the detectability floor $n_h$ does not by itself justify strong
+institutional weight.
+\item Where system parameters and robustness conditions are undisclosed, the default
+institutional posture should be cautious and ordinarily non-attributive.
+\item Stronger institutional use should require transparent calibration evidence,
+disclosure of relevant operating and robustness conditions, and corroboration from
+independent sources.
+\end{itemize}
+\section{From Detection to Adjudication: A Four-Step Institutional Sequence}
+Watermark detection does not, by itself, determine the institutional status of an
+artifact. Even where a detector output supports an inference of synthetic involvement
+at a stated detection threshold and power level, institutions must still
+characterize the form and degree of human action surrounding the artifact's
+production, revision, selection, verification, and use. A probabilistic indication of
+synthetic origin may be relevant to institutional consequence, but it is not enough
+by itself.
+This paper accordingly distinguishes detection from adjudication through a four-step
+sequence organized in two phases. The sequence is schematic rather than
+jurisdiction-specific: different legal and policy regimes may attach different
+consequences to the same forensic signal. The same signal may do different
+institutional work: in court, it may bear on reliability; in regulation, it may
+trigger transparency obligations.
+The technical phase comprises the paper's quantitative contribution: (1) detection of
+possible synthetic involvement, and (2) statistical signal and power analysis
+relative to $n_h$ and $n_E$; it does not itself supply a legal or institutional
+decision rule. This phase asks whether the detector output supplies enough
+model-based signal, under stated assumptions, to justify considering institutional
+inquiry. Where a detector cannot satisfy these threshold requirements under the
+conditions of use, the sequence provides no basis for institutional escalation. It
+does not, and cannot, establish the institutionally relevant questions of human
+responsibility: what human action occurred, by whom, under what standard, and with
+what consequence.
+The institutional phase comprises the work that must follow: (3) characterization of
+post-generative human action, meaning the professional, legal, or scholarly judgment
+that occurred after generation, and (4) analysis of institutional consequence, which
+depends on the specific duties and standards governing the relevant domain.
+Step 3 marks the point at which this paper's statistical analysis ends and
+institution-specific judgment begins. The relevant rubrics are domain-specific and
+lie outside mathematical verification. This paper does not propose a universal
+standard for characterizing post-generative human action; it identifies the question
+institutions must answer before a probabilistic signal is converted into consequence.
+This sequence is not a prediction that institutions will reliably preserve the
+distinction; it identifies the procedural boundary they must preserve if
+probabilistic detection is to support legitimate institutional consequence.
+Consider, as one concrete illustration from legal practice, an AI-assisted legal
+brief. The detector output may satisfy the paper's higher-power benchmark $n_E$ under
+the assumed model. The relevant institutional question, however, is not whether AI
+participated in generation. It is whether the attorney verified the citations and
+legal propositions, exercised independent professional judgment, and satisfied
+applicable procedural and professional duties, including Rule 11 certification,
+competence, candor, and supervision. A detector may support an inference that AI
+systems contributed to the artifact's production; it cannot, alone, establish whether
+the attorney's post-generative action met or failed those existing duties. The
+institutional consequence of detection therefore depends not on the technical finding
+in isolation, but on the application of established professional and procedural
+standards to the artifact's full production history.
+Characterizing post-generative human action requires evidence categories that
+institutions can actually demand and examine. Depending on the setting, these may
+include prompt logs showing what was requested of the system; timestamped edit
+history with authorship attribution; version diffs documenting how the artifact
+changed after generation; human verification traces, such as records of
+citation-checking or fact-checking; and contemporaneous statements of the role the
+author understood the tool to play. None of these is dispositive alone, and their
+availability varies by domain. But specifying the categories converts Step 3 from a
+procedural gesture into a checklist an institution can be held to, which is the
+point: the boundary between detection and adjudication is only meaningful if the
+adjudication side has identifiable inputs.
+This distinction reinforces the broader claim of this paper: detection is not
+adjudication. Provenance signals may contribute evidentiary context, but they cannot
+independently resolve authorship, professional responsibility, or institutional
+consequence. Institutional frameworks that treat synthetic detection as
+self-interpreting risk collapsing materially distinct categories of post-generative
+human action into a single procedural label.
+Synthetic origin may answer \emph{how} an artifact was produced; it does not
+determine \emph{what} the artifact is evidence of, nor what institutional response
+detection licenses.
+\section{Limitations and Scope}
+This paper is a structural and procedural argument, not a technical or empirical
+contribution, and several limitations follow directly from that scope.
+First, the framework introduces no new detector, test statistic, or empirical
+evaluation. The scaling relation is a consequence of a standard signal-detection
+model, and the numerical values in Table 2 are analytic illustrations rather than
+measurements calibrated to any deployed system. Applying the framework to a specific
+watermarking implementation would require estimating $\eta$ and $\delta$ for that
+system, which this paper does not attempt.
+Second, the derivation rests on stylized assumptions: token-level independence,
+locally linear watermark response, and a Gaussian approximation. Realistic
+departures, especially positive autocorrelation and non-stationarity, generally
+increase the required sample length, so the formulas are optimistic from the
+standpoint of detectability. The paper establishes the direction of this correction
+but not its magnitude; quantifying it under realistic mixing conditions is left to
+future work.
+Third, $n_h$ and $n_E$ are statistical quantities describing the detectability and
+power of a single test. They do not encode prior odds, the asymmetric costs of false
+positives and false negatives, robustness to model misspecification, or adversarial
+tampering. As Section 3 emphasizes, base rates, multiple-testing control, disclosure,
+and corroboration are additional inputs or constraints for institutional reliance;
+the benchmarks are inputs to that judgment, not substitutes for it.
+Fourth, the legal and policy discussion is deliberately schematic. The four-step
+sequence identifies a procedural boundary; it does not map the proposed benchmarks
+onto specific standards of proof (for example, preponderance of the evidence versus
+beyond a reasonable doubt), nor does it work through a particular adjudicated case.
+Those mappings are domain-specific and lie outside the statistical scope of this
+paper.
+This paper avoids using ``sufficiency'' as a label for its proposed statistical
+benchmarks. In evidence law, ``sufficiency,'' ``conditional relevance,''
+``admissibility,'' and ``expert reliability'' have specific meanings under rules such
+as Rule 104(b), Rule 702, Daubert, and related state-law standards: Rule 104(b)
+concerns whether evidence is sufficient to support a finding of a conditional fact,
+and the 2023 amendment to Rule 702 requires the proponent to establish, more likely
+than not, that expert testimony satisfies each of the rule's requirements. The
+Statistical Horizon framework instead uses the language of detectability, reliability,
+power, and institutional reliance. Its proposed benchmarks ask whether a detector
+output has enough sample-length-supported signal to inform a proposed attribution
+inference under stated assumptions; they do not determine admissibility, legal
+sufficiency, or ultimate institutional responsibility. The paper accordingly does not
+propose a substitute for Rule 104(b), Rule 702, Daubert, any state-law analogue such
+as Frye or hybrid admissibility standards, or any jurisdiction-specific evidentiary
+rule, nor does it purport to supply a governing standard for non-judicial
+institutional contexts not governed by the Federal Rules of Evidence.
+If a watermark detector output were offered through expert testimony in a federal
+proceeding, Rule 702 would require the proponent to establish that the testimony
+rests on sufficient facts or data, reliable principles and methods, and reliable
+application to the facts of the case. As clarified by the 2023 amendment, this is a
+Rule 104(a) admissibility determination, made by the court on a more-likely-than-not
+standard, rather than a Rule 104(b) question of conditional relevance. The
+disclosures proposed here---text-length reliability curves, stated false-positive and
+false-negative rates, robustness assumptions, and limits on use---are technical
+inputs that may inform a court's gatekeeping analysis, but they do not determine
+admissibility or satisfy Rule 702 on their own.\footnote{See Fed.\ R.\ Evid.\ 702;
+\emph{Daubert v.\ Merrell Dow Pharm., Inc.}, 509 U.S.\ 579 (1993); \emph{Frye v.\
+United States}, 293 F.\ 1013 (D.C.\ Cir.\ 1923).} The framework likewise does not
+address Rule 401 relevance, authentication, hearsay, or other ordinary evidentiary
+doctrines. A detector output might be minimally relevant in the Rule 401 sense while
+still failing Rule 702 reliability, Rule 104(a) gatekeeping, institutional policy
+requirements, or a merits standard of proof.
+These limitations do not undermine the central claim; they locate it. The
+contribution is to discipline how a probabilistic signal is interpreted, not to
+certify any particular detector or to resolve any particular institutional case.
+\section{Conclusion: The Structural Limit of Probabilistic Attribution}
+AI text watermarking represents a meaningful advance in digital provenance. Yet its
+significance for institutional reliance is constrained not only by implementation
+choices, but by structural limits imposed by statistical inference on finite text
+samples. This paper formalizes the Statistical Horizon as a scaling benchmark for
+that problem and argues that detectability should not be confused with reliability for
+institutional reliance.
+The resulting claim is narrower than a universal admissibility rule, but more robust.
+As watermark strength decreases and operating conditions become less transparent,
+required sample length rises sharply and interpretation becomes increasingly
+dependent on hidden parameters, detector calibration, and disclosure. Under such
+conditions, short-text detections are especially poor candidates for strong
+institutional attribution.
+The paper's contribution is not a new statistical test. It is the use of a simple
+scaling benchmark to show why low-visibility watermarking creates an unusually severe
+short-sample problem for institutional use, and why a detectability floor may sit well
+below a plausible reliability benchmark. In that sense, the framework can inform
+disclosure and reliance weighting for probabilistic watermark signals, but it does not
+itself determine admissibility, proof, or institutional outcomes.
+In an era of layered provenance and probabilistic attribution, structural limits are
+not obstacles to governance. They are conditions for governing responsibly.
+\section*{Acknowledgments}
+The author thanks George Paras for technical review and for helpful signal-processing
+perspective that informed the discussion of correlation, independence, and effective
+sample-size reasoning in Section 2.1 and Appendix A.4.
+\appendix
+\section{Derivation of the Statistical Horizon}
+The Statistical Horizon marks the model-based point at which the expected detector
+statistic reaches a specified threshold in a finite text sample. The derivation
+starts from the canonical green-list logit-biasing framework of Kirchenbauer et al.
+[1] and abstracts to a variance-normalized detector-response parameter $\eta$.
+\subsection{Preliminaries: Watermarking Generative Process}
+At each generation step $t$, the LLM produces logits $\ell^{(t)} \in
+\mathbb{R}^{|V|}$. A secret pseudorandom function (seeded by preceding tokens)
+partitions the vocabulary into a green list $G_t$ of relative size $\gamma \in
+(0,1)$. The watermarking rule adds a positive logit bias $\delta > 0$ to green-list
+tokens. After softmax normalization, the probability of sampling a green token rises
+from a baseline value $p_0$ to a perturbed value $p_1(\delta)$. For
+small-to-moderate $\delta$, the induced probability lift may be linearized:
+$p_1(\delta) \approx p_0 + \kappa\delta$, where $\kappa$ is a local response
+coefficient determined by the underlying token distribution and green-list
+construction. Formally, $\kappa = dp_1/d\delta|_{\delta=0}$; in the idealized case
+where baseline green-token mass is approximately $\gamma$, the local response is on
+the order of $\gamma(1-\gamma)$, so that smaller green-list fractions and weaker
+biasing both reduce $\kappa$ and thereby enlarge the required sample length through
+Equation (1).
+\subsection{Classical $z$-Test Formulation}
+Suppose a detector observes $L$ generated tokens and counts the number of green
+tokens $X = \sum_t \mathbf{1}\{w_t \in G_t\}$. Under $H_0$ (no watermark):
+$E[X] = Lp_0$, $\mathrm{Var}(X) \approx Lp_0(1-p_0)$. The normalized detector
+statistic is:
+\begin{equation}
+Z = \frac{X - Lp_0}{\sqrt{Lp_0(1-p_0)}}
+\end{equation}
+Under $H_1$ (watermark): $E[X] \approx L(p_0 + \kappa\delta)$. Define $\eta :=
+\kappa/\sqrt{p_0(1-p_0)}$. Then $\mu_g = \eta\delta\sqrt{L}$.
+\subsection{Horizon Length}
+The Statistical Horizon is defined as the sample length $n_h$ at which the expected
+detector statistic under $H_1$ reaches $z^*$: $\eta\delta\sqrt{n_h} = z^*$. Solving:
+\begin{equation}
+n_h = \frac{(z^*)^2}{(\eta\delta)^2}
+\end{equation}
+\subsection{Interpretive Limits}
+The derivation assumes a $z$-test-like detector, approximate token independence, and
+a locally linear watermark response. A practically important point is the effect of
+dependence. Because green-list assignment is seeded by preceding tokens and generated
+text is itself autocorrelated, exact token-level independence is not expected in
+realistic samples. Under positive token-level correlation, the variance of $X$
+exceeds the independence approximation, so the formula above tends to understate
+required sample length. In that sense, the stylized derivation is plausibly
+optimistic: realistic dependence would typically strengthen, not weaken, the paper's
+cautionary conclusion.
+\section{Power Analysis and the Higher-Power Reliability Benchmark}
+Under the normal-approximation model, $Z \mid H_1 \sim \mathcal{N}(\mu, 1)$ where
+$\mu = \eta\delta\sqrt{L}$. For a one-sided threshold test rejecting when $Z \geq
+z^*$, power is:
+\begin{equation}
+\mathrm{Power}(L) = 1 - \Phi(z^* - \eta\delta\sqrt{L})
+\end{equation}
+At $L = n_h$, $\mu = z^*$, so $\mathrm{Power}(n_h) = 1 - \Phi(0) = 0.5$. Thus the
+Statistical Horizon corresponds to a 50\% detection-power point.
+If the target power is $1-\beta$, one must solve $1 - \Phi(z^* - \eta\delta\sqrt{L})
+= 1-\beta$, which yields $\eta\delta\sqrt{L} = z^* + z_{1-\beta}$. Hence the
+higher-power reliability benchmark is given by Equation (2).
+For illustration, let $z^* = 3$. Then $n_h = 9/(\eta^2\delta^2)$. Table 2 gives
+illustrative values for $n_h$ and $n_E$ at 80\% and 90\% power.
+\begin{table}[h]
+\centering
+\caption{Illustrative detectability floors and higher-power reliability benchmarks
+($z^* = 3$). Analytic sensitivity examples only; not calibrated claims about any
+specific detector or deployment.}
+\begin{tabular}{cccccc}
+\toprule
+$\eta$ & $\delta$ & $\eta\delta$ & $n_h$ & $n_E$ (80\%) & $n_E$ (90\%)\\
+\midrule
+0.8 & 0.8 & 0.64 & 22.0 & 36.0 & 44.8\\
+0.8 & 0.4 & 0.32 & 87.9 & 144.1 & 179.0\\
+0.8 & 0.2 & 0.16 & 351.6 & 576.5 & 716.1\\
+0.4 & 0.4 & 0.16 & 351.6 & 576.5 & 716.1\\
+0.4 & 0.2 & 0.08 & 1406.2 & 2305.9 & 2864.3\\
+0.2 & 0.2 & 0.04 & 5625.0 & 9223.8 & 11457.3\\
+\bottomrule
+\end{tabular}
+\end{table}
+\section{Extension Notes on Detector Classes}
+The formal derivation in Appendix A is specific to a $z$-test-style mean-shift
+detector. Other detector families, including likelihood-ratio or Bayesian detectors,
+may have different operating constants, calibration procedures, and robustness
+profiles. The present paper does not claim that all such detectors can be reduced
+exactly to the same one-parameter representation.
+What the paper claims is narrower. Across detector families, finite-sample
+performance plausibly depends on the magnitude of the induced separation between null
+and alternative distributions and on the amount of text available. The policy
+argument of the main text therefore does not rest on the claim that all detectors
+behave identically. It rests on the more modest point that opaque,
+parameter-sensitive, finite-sample statistical methods should not be given strong
+institutional weight without transparent support.
+\begin{thebibliography}{99}
+\bibitem{kgw23} Kirchenbauer, J., Geiping, J., Wen, Y., Katz, J., Miers, I., and
+Goldstein, T. (2023a). A watermark for large language models. In \emph{Proceedings
+of the 40th International Conference on Machine Learning}.
+\bibitem{kgw23b} Kirchenbauer, J., et al. (2024). On the reliability of watermarks
+for large language models. \emph{International Conference on Learning
+Representations}.
+\bibitem{kudi24} Kuditipudi, R., Thickstun, J., Hashimoto, T., and Liang, P. (2024).
+Robust distortion-free watermarking for language models. \emph{Transactions on
+Machine Learning Research}.
+\bibitem{hu24} Hu, Z., Chen, L., Wu, X., Wu, Y., Zhang, H., and Huang, H. (2024).
+Unbiased watermark for large language models. \emph{ICLR}.
+\bibitem{ren24} Ren, J., et al. (2024). A robust semantics-based watermark for large
+language models against paraphrasing. \emph{Findings of ACL: NAACL 2024}, pp.\
+613--625.
+\bibitem{fairoze23} Fairoze, J., et al. (2023). Publicly-detectable watermarking for
+language models. arXiv:2310.18491.
+\bibitem{jsv24} Jovanovi\'c, N., Staab, R., and Vechev, M. (2024). Watermark stealing
+in large language models. \emph{ICML}.
+\bibitem{li24} Li, X., Ruan, F., Wang, H., Long, Q., and Su, W.J. (2024). A
+statistical framework of watermarks for large language models. arXiv:2404.01245.
+\bibitem{nas09} National Academy of Sciences. (2009). \emph{Strengthening Forensic
+Science in the United States: A Path Forward}. National Academies Press.
+\bibitem{pcast16} PCAST. (2016). \emph{Forensic Science in Criminal Courts: Ensuring
+Scientific Validity of Feature-Comparison Methods}. Executive Office of the
+President.
+\bibitem{omidi26} Omidi, R., Dong, Y., and Wang, B. (2026). On Google's SynthID-Text
+LLM Watermarking System: Theoretical Analysis and Empirical Validation.
+arXiv:2603.03410.
+\bibitem{zhang26} Zhang, S., Chen, Y., Han, J., Cheng, B., and Ma, J. (2026). Beyond
+a fixed seal: Adaptive stealing watermark in large language models. arXiv:2604.10893.
+\bibitem{cgz23} Christ, M., Gunn, S., and Zamir, O. (2023). Undetectable watermarks
+for language models. arXiv:2306.09194.
+\bibitem{c2pa25} Coalition for Content Provenance and Authenticity (C2PA). (n.d.).
+C2PA: Verifying media content sources. Accessed June 23, 2026.
+\url{https://c2pa.org/}
+\bibitem{ec26} European Commission. (2026). Code of Practice on Transparency of
+AI-Generated Content (10 June 2026); Commission Opinion on the Assessment of the
+Code of Practice on Transparency of AI-Generated Content (9 July 2026); and
+Guidelines on Transparency Obligations for Providers and Deployers of AI Systems
+(20 July 2026). European Commission, Shaping Europe's Digital Future.
+\bibitem{euaiact24} European Parliament and Council. (2024). Regulation (EU)
+2024/1689 of 13 June 2024 laying down harmonised rules on artificial intelligence
+(Artificial Intelligence Act). \emph{Official Journal of the European Union}, OJ L,
+2024/1689, 12 July 2024.
+\bibitem{sb942} California Legislature. (2024). SB-942, California AI Transparency
+Act, Chapter 25, California Business and Professions Code \S22757 et seq. Operative
+August 2, 2026.
+\bibitem{dathathri24} Dathathri, S., et al. (2024). Scalable watermarking
+for identifying large language model outputs. \emph{Nature}, 634, 818--823,
+including Supplementary Information, Appendices H.4--H.5 and Fig. C1.
+\end{thebibliography}
+\end{document}
