@@ -1,19 +1,67 @@
-# The Statistical Horizon: A Scaling Benchmark and Procedural Caution for Institutional Use of AI Text Watermarking
-
-**Henri F. Van Ryn**  
-Independent Researcher  
+henrivanryn
+statistical-horizon-watermarking
+Public
+Go to file
+t
+T
+Name		
+henrivanryn
+henrivanryn
+Add files via upload
+2ec76ef
+ · 
+2 minutes ago
+CITATION.cff
+Update CITATION.cff
+2 months ago
+LICENSE
+Create LICENSE
+2 months ago
+README.md
+Update README.md
+2 weeks ago
+README_v6_1.md
+Add files via upload
+2 minutes ago
+statistical_horizon_v5_8.pdf
+Add files via upload
+2 months ago
+statistical_horizon_v5_8.tex
+Create statistical_horizon_v5_8.tex
+2 months ago
+statistical_horizon_v5_9 (2).tex
+Add files via upload
+2 weeks ago
+statistical_horizon_v5_final.pdf
+Add files via upload
+4 months ago
+statistical_horizon_v5_final.pdf.ots
+Add files via upload
+4 months ago
+statistical_horizon_v5_fixed.docx
+Add files via upload
+4 months ago
+statistical_horizon_v6_1.pdf
+Add files via upload
+4 minutes ago
+statistical_horizon_v6_1.tex
+Add files via upload
+5 minutes ago
+Repository files navigation
+README
+License
+The Statistical Horizon: A Scaling Benchmark and Procedural Caution for Institutional Use of AI Text Watermarking
+Henri F. Van Ryn
+Independent Researcher
 henri.vanryn@gmail.com
 
-**Version 5.9 | February 10, 2026; revised July 23, 2026**
+Version 5.9 | February 10, 2026; revised July 23, 2026
 
 Watermark detection tells you a signal is present; it does not tell you whether the signal is strong enough to act on. This paper shows why that gap is largest exactly where institutions are most tempted to act: short texts. It also identifies what disclosure is needed before a detector output can bear institutional weight.
 
 This repository contains the public deposit of the working paper formalizing the Statistical Horizon as a structural scaling benchmark for finite-sample AI text watermark detectability.
 
----
-
-## Abstract
-
+Abstract
 AI text watermarking has moved from academic speculation into industrial and institutional consideration, but watermark detections remain probabilistic indicators rather than proof of authorship. This paper formalizes the Statistical Horizon as a structural scaling benchmark: in a stylized mean-shift model, the sample length required for detection scales inversely with the square of the combined signal term, creating a steep inverse-quadratic penalty for low-visibility watermarking.
 
 The paper distinguishes two thresholds: a lower detectability floor, n_H, representing the 50% power point, and a higher-power reliability benchmark, n_E. It argues that crossing the detectability floor does not, by itself, justify institutional reliance.
@@ -22,70 +70,77 @@ The framework's contribution is to discipline how watermark signals are interpre
 
 The paper situates this caution within current governance. Where a watermark detector output is offered as expert evidence in a U.S. federal proceeding, the disclosures proposed here are technical inputs to the court's Rule 702 / Rule 104(a) reliability gatekeeping, not a substitute for it. In the EU, the framework bears on Article 50 transparency obligations and related transparency expectations for AI-generated content.
 
----
-
-## Core Claim
-
-**The Statistical Horizon is not an anti-watermarking argument. It is an anti-overclaiming argument.**
+Core Claim
+The Statistical Horizon is not an anti-watermarking argument. It is an anti-overclaiming argument.
 
 A watermark detector may be technically valid and still produce outputs that are too weak, too length-sensitive, or too poorly disclosed to support institutional action in a particular case. The shorter the text and the less visible the watermark signal, the more this distinction matters.
 
----
-
-## Files
-
-- `statistical_horizon_v5_9.pdf` — current manuscript (v5.9)
-- `statistical_horizon_v5_9.tex` — editable LaTeX source (canonical master)
-
-### Previous versions
-
-- `statistical_horizon_v5_8.pdf` — previous manuscript (v5.8)
-- `statistical_horizon_v5_8.tex` — previous LaTeX source
-- `statistical_horizon_v5_final.pdf` — original public deposit (v5.0)
-- `statistical_horizon_v5_final.pdf.ots` — OpenTimestamps proof of existence
-- `statistical_horizon_v5_fixed.docx` — original Word source (v5.0)
-
----
-
-## Version History
-
-### v5.9 — July 23, 2026
-
-- Primary-source verification and attribution corrections.
-- Unsupported quantitative claim removed.
-- SynthID-Text discussion revised using Google's technical supplement and related primary literature.
-- Stylized-model discussion clarified.
-- Bibliography corrected and updated.
-
-### v5.8 — June 23, 2026
-
-- Terminology aligned with evidence-law usage.
-- Rule 702 / Rule 104(a) framing added.
-- Autocorrelation discussion expanded.
-- Reference corrections.
-
-### v5.0 — February 10, 2026; revised April 16, 2026
-
+Files
+statistical_horizon_v5_9.pdf — current manuscript (v5.9)
+statistical_horizon_v5_9.tex — editable LaTeX source (canonical master)
+Previous versions
+statistical_horizon_v5_8.pdf — previous manuscript (v5.8)
+statistical_horizon_v5_8.tex — previous LaTeX source
+statistical_horizon_v5_final.pdf — original public deposit (v5.0)
+statistical_horizon_v5_final.pdf.ots — OpenTimestamps proof of existence
+statistical_horizon_v5_fixed.docx — original Word source (v5.0)
+Version History
+v5.9 — July 23, 2026
+Primary-source verification and attribution corrections.
+Unsupported quantitative claim removed.
+SynthID-Text discussion revised using Google's technical supplement and related primary literature.
+Stylized-model discussion clarified.
+Bibliography corrected and updated.
+v5.8 — June 23, 2026
+Terminology aligned with evidence-law usage.
+Rule 702 / Rule 104(a) framing added.
+Autocorrelation discussion expanded.
+Reference corrections.
+v5.0 — February 10, 2026; revised April 16, 2026
 Original public deposit retained unchanged for provenance.
 
----
-
-## Keywords
-
+Keywords
 AI watermarking; statistical inference; forensic science; institutional reliance; machine learning governance; digital provenance; AI policy
 
----
+Provenance
+SHA256 (statistical_horizon_v5_final.pdf):
 
-## Provenance
+a5a05d6e458282bce5749eeb7fd254c60046a9b359ec1bbc3ccf2a73380e810f
 
-**SHA256 (`statistical_horizon_v5_final.pdf`):**
+Timestamp: OpenTimestamps blockchain proof of existence, April 16, 2026.
 
-`a5a05d6e458282bce5749eeb7fd254c60046a9b359ec1bbc3ccf2a73380e810f`
-
-**Timestamp:** OpenTimestamps blockchain proof of existence, April 16, 2026.
-
----
-
-## License
-
+License
 CC-BY Attribution 4.0 International
+
+About
+
+A Scaling Benchmark and Procedural Caution for Institutional Use of AI Text Watermarking — Henri F. Van Ryn, 2026
+
+Resources
+Readme
+License
+
+Cite this repository
+Activity
+Stars
+0 stars
+Watchers
+0 watching
+Forks
+0 forks
+Releases
+No releases published
+Create a new release
+Packages
+No packages published
+Publish your first package
+Contributors
+1
+ (1)
+@henrivanryn
+henrivanryn
+Languages
+TeX
+100%
+Footer
+© 2026 GitHub
